@@ -35,6 +35,7 @@
 
 return array(
 
+    'bootstrapper' => array('auto' => true),
 	'docs' => array('handles' => 'docs'),
     'form-base-model' => array('auto' => true),
 
