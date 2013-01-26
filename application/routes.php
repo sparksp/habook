@@ -112,3 +112,58 @@ Route::filter('auth', function()
 {
 	if (Auth::guest()) return Redirect::to_action('session@new');
 });
+
+Route::filter('email', function()
+{
+	// Start the Bundle (and IoC defaults)
+	Bundle::start('swiftmailer');
+
+	// Register a transporter in the IoC container
+	// This will overwrite the swiftmailer default IoC
+	IoC::register('mailer.transport', function()
+	{
+		// Retrieve the relevant information from config.
+		// This is here to make configurations easier.
+		$agents = Config::get('email.agents');
+		$default = Config::get('email.default');
+
+		if (!empty($agents) && !empty($agents[$default])) {
+
+			$defaultAgent = $agents[$default];
+			
+			$transportClass = sprintf('Swift_%sTransport',
+				ucfirst(strtolower($defaultAgent['transport']))
+			);
+
+			$transport = call_user_func(array($transportClass, 'newInstance'));
+
+			// Verbose configuration settings.
+			if (!empty($defaultAgent['hostname'])) {
+				$transport->setHost( $defaultAgent['hostname'] );
+			}
+
+			if (!empty($defaultAgent['port'])) {
+				$transport->setPort( $defaultAgent['port'] );
+			}
+
+			if (!empty($defaultAgent['username'])) {
+				$transport->setUsername( $defaultAgent['username'] );
+			}
+
+			if (!empty($defaultAgent['password'])) {
+				$transport->setPassword( $defaultAgent['password'] );
+			}
+
+			if (!empty($defaultAgent['command'])) {
+				$transport->setCommand( $defaultAgent['command'] );
+			}
+
+			// Return the configured transport.
+			return $transport;
+
+		}
+
+		// If no transport / config found, default to mail.
+		return Swift_MailTransport::newInstance();
+	});
+});
