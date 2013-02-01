@@ -23,60 +23,27 @@
         {{-- Add your site or application content here --}}
         <header class="container">
             <div class="row">
-                <div class="span2" id="logo"><a href=""><img src="img/logo.png" alt="High Adventure Logo" /></a></div>
+                <div class="span2" id="logo"><a href=""><img src="{{asset('img/logo.png')}}" alt="High Adventure Logo" /></a></div>
                 <div class="span8" id="masthead">
                     <h1 id="tag-line">High Adventure<br />
                         <small>15th - 17th March 2013</small>
                     </h1>
                     <ul class="inline" id="top-line">
-                        <li><a href="">Home</a></li>
-                        <li><a href="">About</a></li>
-                        <li><a href="">Past Events</a></li>
-                        <li><a href="">Galleries</a></li>
-                        <li><a href="">Contact</a></li>
+                        <li><a href="http://high-adventure.org.uk">Home</a></li>
+                        <li><a href="http://high-adventure.org.uk/about.html">About</a></li>
+                        <li><a href="http://high-adventure.org.uk/past.html">Past Events</a></li>
+                        <li><a href="http://high-adventure.org.uk/galleries.html">Galleries</a></li>
+                        <li><a href="http://high-adventure.org.uk/contact.html">Contact</a></li>
                     </ul>
                 </div>
-                <div class="span2" id="alt-logo"><img src="img/alt-logo.jpg" alt="Explorer Network" /></div>
+                <div class="span2" id="alt-logo"><img src="{{asset('img/alt-logo.jpg')}}" alt="Explorer Network" /></div>
             </div>
         </header>
         <hr id="divider" />
         <section id="content" role="main" class="container">
             <div class="row">
-                <aside class="span3" role="sidebar">
-                    <nav role="navigation" id="nav">
-                        <ul id="main-list" class="nav nav-list">
-                            <li><a href="">Home</a></li>
-                            <li><a href="">About</a>
-                                <ul>
-                                    <li><a href="">How do we register?</a></li>
-                                    <li><a href="">How much does it cost?</a></li>
-                                    <li><a href="">Join the staff team</a></li>
-                                    <li><a href="">Training and Equipment</a></li>
-                                    <li><a href="">What are the Rules?</a></li>
-                                    <li><a href="">Frequently Asked Questions</a></li>
-                                    <li><a href="">Downloads</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="">Past Events</a>
-                                <ul>
-                                    <li><a href="">2012</a></li>
-                                    <li><a href="">2011</a></li>
-                                    <li><a href="">2010</a></li>
-                                    <li><a href="">2009</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="">Galleries</a></li>
-                            <li><a href="">Contact</a></li>
-                            <li><a href="">Other Events</a></li>
-                        </ul>
-                    </nav>
-                    <div class="pod">
-                        <a href="http://womble.me.uk/"><img src="img/womble.png" /></a>
-                    </div>
-                </aside>
-
                 {{-- Main Content Goes in Here --}}
-                <section class="span9" id="content">
+                <section id="content">
                     {{ $content }}
                 </section>
                 {{-- End Main Content --}}

@@ -32,11 +32,15 @@
 |
 */
 
-Route::group(array('before' => 'auth'), function()
-{
+// Route::group(array('before' => 'auth'), function()
+// {
     Route::get('/', 'home@index');
-    Route::any('logout', 'session@destroy');
-});
+    Route::get('health', 'health@index');
+    Route::any('health/u18', 'health@u18');
+    Route::any('health/o18', 'health@o18');
+
+    // Route::any('logout', 'session@destroy');
+// });
 
 Route::any('login', 'session@new');
 
