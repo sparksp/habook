@@ -23,7 +23,7 @@
         {{-- Add your site or application content here --}}
         <header class="container">
             <div class="row">
-                <div class="span2" id="logo"><a href=""><img src="{{asset('img/logo.png')}}" alt="High Adventure Logo" /></a></div>
+                <div class="span2" id="logo"><a href="http://high-adventure.org.uk"><img src="{{asset('img/logo.png')}}" alt="High Adventure Logo" /></a></div>
                 <div class="span8" id="masthead">
                     <h1 id="tag-line">High Adventure<br />
                         <small>15th - 17th March 2013</small>
@@ -51,7 +51,7 @@
         </section>
         <footer class="container" role="footer">
             <div class="row">
-                <p class="span12"><small>&copy;</small><a href="">Leicestershire Scout Council</a>. Made by <a href="">Phill Sparks</a>. Powered by <a href="">cPortals</a>.</p>
+                <p class="span12"><small>&copy;</small><a href="http://leicestershirescouts.org.uk/">Leicestershire Scout Council</a>. Made by <a href="http://phills.me.uk/">Phill Sparks</a>. Powered by <a href="http://laravel.com/">Laravel</a>.</p>
             </div>
         </footer>
 
