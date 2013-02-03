@@ -11,6 +11,7 @@ class HealthForm extends FormBaseModel\Base {
         'postcode' => 'required|min:5|max:10',
         'telephone' => 'required',
         // 'dateofbirth' => 'todo',
+        'date_of_birth' => 'required|date_required|checkdate',
         'unit_name' => 'required',
         'team_name' => 'required',
         // Primary Contact
@@ -18,8 +19,8 @@ class HealthForm extends FormBaseModel\Base {
         'primary_contact_relationship' => 'required',
         'primary_contact_address' => 'required',
         'primary_contact_postcode' => 'required',
-        'primary_contact_daytelephone' => 'required',
-        'primary_contact_nighttelephone' => 'required',
+        'primary_contact_day_telephone' => 'required',
+        'primary_contact_evening_telephone' => 'required',
         // 'primary_contact_mobile' => 'required',
 
         // Secondary Contact
@@ -27,8 +28,8 @@ class HealthForm extends FormBaseModel\Base {
         'secondary_contact_relationship' => 'required',
         'secondary_contact_address' => 'required',
         'secondary_contact_postcode' => 'required',
-        'secondary_contact_daytelephone' => 'required',
-        'secondary_contact_nighttelephone' => 'required',
+        'secondary_contact_day_telephone' => 'required',
+        'secondary_contact_evening_telephone' => 'required',
         // 'secondary_contact_mobile' => 'required',
 
         // Medical Details
@@ -46,7 +47,7 @@ class HealthForm extends FormBaseModel\Base {
         'medical_dietary' => 'required|in:yes,no',
         'medical_dietary_details' => '', // required when medical_dietary,yes
 
-        'medical_tetnus_date' => '', // optional
+        'medical_tetnus_date' => 'checkdate', // optional
         'medical_contact_lens' => 'required|in:yes,no',
 
         'medical_treatment' => 'required|in:yes,no',
@@ -61,17 +62,49 @@ class HealthForm extends FormBaseModel\Base {
         'consultant_telephone' => '',
         'patient_number' => '',
 
-        'parent_name' => 'required',
-        'parent_guardian' => 'required|in:parent,guardian',
-        'parent_email' => 'required|email',
-
+        'consent' => 'accepted',
 
         // if $adult
-        // 'mobile' => 'required',
+        // 'crb_number' => 'required',
+        // 'crb_issue_date' => 'required',
+        // 'is_leader' => 'required',
+        // 'first_aid' => 'required',
 
     );
 
     public static $adult = false;
+
+    public static function before_validation()
+    {
+        Validator::register('date_required', function($attribute, $value, $parameters)
+        {
+            return !( empty($value) or empty($value['day']) or empty($value['month']) or empty($value['year']) );
+        });
+        Validator::register('checkdate', function($attribute, $value, $parameters)
+        {
+            if ( empty($value) or empty($value['day']) or empty($value['month']) or empty($value['year']) )
+            {
+                return true; // no date
+            }
+
+            $month = intval($value['month']);
+            $day   = intval($value['day']);
+            $year  = intval($value['year']);
+
+            return checkdate($month, $day, $year);
+        });
+
+
+        if (static::$adult)
+        {
+            static::$rules += array(
+                'crb_number' => 'required|size:12',
+                'crb_issue_date' => 'date_required|checkdate',
+                'is_leader' => 'required',
+                'first_aid' => 'required',
+            );
+        }
+    }
 
     public static function genders()
     {
@@ -107,13 +140,13 @@ class HealthForm extends FormBaseModel\Base {
     /**
      * @return array of years
      */
-    public static function years($from = -10)
+    public static function years($from = -10, $to = -80)
     {
-        $years = range(date('Y') + $from, date('Y') - 80);
+        $years = range(date('Y') + $from, date('Y') + $to);
         return array_combine($years, $years);
     }
 
-    public static function date_select($name, $from = -10)
+    public static function date_select($name, $from = -10, $to = -80)
     {
         $old = self::old($name);
 
@@ -121,7 +154,7 @@ class HealthForm extends FormBaseModel\Base {
         return
             Form::mini_select("{$name}[day]", $blank + self::days(), array_get($old, 'day', '')).' / '.
             Form::medium_select("{$name}[month]", $blank + self::months(), array_get($old, 'month', '')).' / '.
-            Form::small_select("{$name}[year]", $blank + self::years($from), array_get($old, 'year', ''));
+            Form::small_select("{$name}[year]", $blank + self::years($from, $to), array_get($old, 'year', ''));
 
     }
 

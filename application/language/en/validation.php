@@ -69,6 +69,11 @@ return array(
 	"unique"         => "The :attribute has already been taken.",
 	"url"            => "The :attribute format is invalid.",
 
+
+	"date_required" => "The :attribute field is required.",
+	"checkdate" => "The :attribute field must be a valid date.",
+
+
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Language Lines
@@ -84,7 +89,9 @@ return array(
 	|
 	*/
 
-	'custom' => array(),
+	'custom' => array(
+		'consent_accepted' => 'You must read and accept the above statements.',
+	),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -101,6 +108,16 @@ return array(
 	|
 	*/
 
-	'attributes' => array(),
+	'attributes' => array(
+		'email' => 'email address',
+		'crb_number' => 'CRB number',
+		'crb_issue_date' => 'CRB issue date',
+		'is_leader' => 'appointed leader',
+		'medical_illness' => 'illness and disability',
+		'medical_allergy' => 'allergy',
+		'medical_dietary' => 'dietary',
+		'medical_tetnus_date' => 'date of last tetnus',
+		'medical_contact_lens' => 'contact lens',
+	),
 
 );

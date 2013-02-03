@@ -5,8 +5,8 @@
 
     @if ($errors->all())
     <div class="alert alert-block alert-error">
-        <strong>Oops!</strong>
-        Please review the errors below and try again.
+        <strong>{{__('health.oops')}}</strong>
+        {{__('health.please_try_again')}}
     </div>
     @endif
 
@@ -87,14 +87,14 @@
 @if (HealthForm::$adult)
     <?php echo Form::control_group(
         Form::label('crb_number', __('health.crb_number')),
-        Form::text('crb_number', HealthForm::old('crb_number')),
+        Form::text('crb_number', HealthForm::old('crb_number'), array('maxlength' => 12)),
         'crb_number'.$errors->first('crb_number', ' error'),
         $errors->first('crb_number', '<p class="help-block">:message</p>')
     ) ?>
 
     <?php echo Form::control_group(
         Form::label('crb_issue_date', __('health.crb_issue_date')),
-        HealthForm::date_select('crb_issue_date'),
+        HealthForm::date_select('crb_issue_date', 0, -10),
         'crb_issue_date'.$errors->first('crb_issue_date', ' error'),
         $errors->first('crb_issue_date', '<p class="help-block">:message</p>')
     ) ?>
@@ -103,138 +103,124 @@
         <p class="controls">{{__('health.crb_instructions')}}</p>
     </div>
 
-    <?php echo Form::control_group(
-        Form::label('leader', __('health.is_leader')),
-        Form::mini_select('leader', HealthForm::yesno(), HealthForm::old('leader')),
-        'leader'.$errors->first('leader', ' error'),
-        $errors->first('leader', '<p class="help-block">:message</p>')
-    ) ?>
+    <div class="control-group is_leader{{ $errors->first('is_leader', ' error') }}">
+        {{ Form::label('is_leader', __('health.is_leader')) }}
+        <div class="controls">
+            {{ Form::mini_select('is_leader', HealthForm::yesno(), HealthForm::old('is_leader')) }}
+
+            {{ $errors->first('is_leader', '<p class="help-block">:message</p>') }}
+        </div>
+    </div>
 
     <div class="control-group first_aid{{ $errors->first('first_aid', ' error') }}">
         {{ Form::label('first_aid', __('health.first_aid')) }}
         <div class="controls">
-        {{ Form::mini_select('first_aid', HealthForm::yesno(), HealthForm::old('first_aid')) }}
+            {{ Form::mini_select('first_aid', HealthForm::yesno(), HealthForm::old('first_aid')) }}
 
-        {{ Form::label('first_aid_details', __('health.if_yes_give_details')) }}
-        {{ Form::xlarge_text('first_aid_details', HealthForm::old('first_aid_details')) }}
+            {{ Form::label('first_aid_details', __('health.if_yes_give_details')) }}
+            {{ Form::xlarge_text('first_aid_details', HealthForm::old('first_aid_details')) }}
 
-        {{ $errors->first('first_aid', '<p class="help-block">:message</p>') }}
+            {{ $errors->first('first_aid', '<p class="help-block">:message</p>') }}
         </div>
     </div>
 
 @endif
 
-    <div class="control-group">
-        <strong class="control-label">{{__('health.permission')}}</strong>
-        @if (HealthForm::$adult)
-        <p class="controls" style="padding-top: 5px">{{__('health.permission_detail_o18')}}</p>
-        @else
-        <p class="controls" style="padding-top: 5px">{{__('health.permission_detail_u18')}}</p>
-        @endif
-    </div>
-    <div class="control-group">
-        <strong class="control-label">{{__('health.publicity')}}</strong>
-        <p class="controls" style="padding-top: 5px">{{__('health.publicity_detail')}}</p>
-    </div>
-    <div class="control-group">
-        <strong class="control-label">{{__('health.cancellation')}}</strong>
-        @if (HealthForm::$adult)
-        <p class="controls" style="padding-top: 5px">{{__('health.cancellation_detail_o18')}}</p>
-        @else
-        <p class="controls" style="padding-top: 5px">{{__('health.cancellation_detail_u18')}}</p>
-        @endif
-    </div>
-
     <h2>{{__('health.home-contact')}}</h2>
 
-    <h3>{{__('health.primary-contact')}}</h3>
+    <div class="row"><div class="primary-contact-block span6">
 
-    <?php echo Form::control_group(
-        Form::label('primary_contact_name', __('health.contact_name')),
-        Form::text('primary_contact_name', HealthForm::old('primary_contact_name')),
-        'contact_name'.$errors->first('primary_contact_name', ' error'),
-        $errors->first('primary_contact_name', '<p class="help-block">:message</p>')
-    ) ?>
+        <h3>{{__('health.primary-contact')}}</h3>
 
-    <?php echo Form::control_group(
-        Form::label('primary_contact_relationship', __('health.contact_relationship')),
-        Form::text('primary_contact_relationship', HealthForm::old('primary_contact_relationship')),
-        'contact_relationship'.$errors->first('primary_contact_relationship', ' error'),
-        $errors->first('primary_contact_relationship', '<p class="help-block">:message</p>')
-    ) ?>
+        <?php echo Form::control_group(
+            Form::label('primary_contact_name', __('health.contact_name')),
+            Form::text('primary_contact_name', HealthForm::old('primary_contact_name')),
+            'contact_name'.$errors->first('primary_contact_name', ' error'),
+            $errors->first('primary_contact_name', '<p class="help-block">:message</p>')
+        ) ?>
 
-    <?php echo Form::control_group(
-        Form::label('primary_contact_address', __('health.contact_address')),
-        Form::textarea('primary_contact_address', HealthForm::old('primary_contact_address'), array('rows' => 3)).'<br>'.
-        Form::small_text('primary_contact_postcode', HealthForm::old('primary_contact_postcode'), array('placeholder' => __('health.contact_postcode'), 'style' => 'text-transform: uppercase', 'maxlength' => 8)),
-        'contact_address'.$errors->first('primary_contact_address', ' error').$errors->first('primary_contact_postcode', ' error'),
-        $errors->first('primary_contact_address', '<p class="help-block">:message</p>') ?:
-        $errors->first('primary_contact_postcode', '<p class="help-block">:message</p>')
-    ) ?>
+        <?php echo Form::control_group(
+            Form::label('primary_contact_relationship', __('health.contact_relationship')),
+            Form::text('primary_contact_relationship', HealthForm::old('primary_contact_relationship')),
+            'contact_relationship'.$errors->first('primary_contact_relationship', ' error'),
+            $errors->first('primary_contact_relationship', '<p class="help-block">:message</p>')
+        ) ?>
 
-    <?php echo Form::control_group(
-        Form::label('primary_contact_daytelephone', __('health.contact_day_telephone')),
-        Form::medium_telephone('primary_contact_daytelephone', HealthForm::old('primary_contact_daytelephone')),
-        'telephone'.$errors->first('primary_contact_daytelephone', ' error'),
-        $errors->first('primary_contact_daytelephone', '<p class="help-block">:message</p>')
-    ) ?>
-    <?php echo Form::control_group(
-        Form::label('primary_contact_nighttelephone', __('health.contact_evening_telephone')),
-        Form::medium_telephone('primary_contact_nighttelephone', HealthForm::old('primary_contact_nighttelephone')),
-        'telephone'.$errors->first('primary_contact_nighttelephone', ' error'),
-        $errors->first('primary_contact_nighttelephone', '<p class="help-block">:message</p>')
-    ) ?>
-    <?php echo Form::control_group(
-        Form::label('primary_contact_mobile', __('health.contact_mobile')),
-        Form::medium_telephone('primary_contact_mobile', HealthForm::old('primary_contact_mobile')),
-        'mobile'.$errors->first('primary_contact_mobile', ' error'),
-        $errors->first('primary_contact_mobile', '<p class="help-block">:message</p>')
-    ) ?>
+        <?php echo Form::control_group(
+            Form::label('primary_contact_address', __('health.contact_address')),
+            Form::textarea('primary_contact_address', HealthForm::old('primary_contact_address'), array('rows' => 3)).'<br>'.
+            Form::small_text('primary_contact_postcode', HealthForm::old('primary_contact_postcode'), array('placeholder' => __('health.contact_postcode'), 'style' => 'text-transform: uppercase', 'maxlength' => 8)),
+            'contact_address'.$errors->first('primary_contact_address', ' error').$errors->first('primary_contact_postcode', ' error'),
+            $errors->first('primary_contact_address', '<p class="help-block">:message</p>') ?:
+            $errors->first('primary_contact_postcode', '<p class="help-block">:message</p>')
+        ) ?>
 
+        <?php echo Form::control_group(
+            Form::label('primary_contact_day_telephone', __('health.contact_day_telephone')),
+            Form::medium_telephone('primary_contact_day_telephone', HealthForm::old('primary_contact_day_telephone')),
+            'telephone'.$errors->first('primary_contact_day_telephone', ' error'),
+            $errors->first('primary_contact_day_telephone', '<p class="help-block">:message</p>')
+        ) ?>
+        <?php echo Form::control_group(
+            Form::label('primary_contact_evening_telephone', __('health.contact_evening_telephone')),
+            Form::medium_telephone('primary_contact_evening_telephone', HealthForm::old('primary_contact_evening_telephone')),
+            'telephone'.$errors->first('primary_contact_evening_telephone', ' error'),
+            $errors->first('primary_contact_evening_telephone', '<p class="help-block">:message</p>')
+        ) ?>
+        <?php echo Form::control_group(
+            Form::label('primary_contact_mobile', __('health.contact_mobile')),
+            Form::medium_telephone('primary_contact_mobile', HealthForm::old('primary_contact_mobile')),
+            'mobile'.$errors->first('primary_contact_mobile', ' error'),
+            $errors->first('primary_contact_mobile', '<p class="help-block">:message</p>')
+        ) ?>
 
-    <h3>{{__('health.secondary-contact')}}</h3>
+    </div><div class="secondary-contact-block span6">
 
-    <?php echo Form::control_group(
-        Form::label('secondary_contact_name', __('health.contact_name')),
-        Form::text('secondary_contact_name', HealthForm::old('secondary_contact_name')),
-        'contact_name'.$errors->first('secondary_contact_name', ' error'),
-        $errors->first('secondary_contact_name', '<p class="help-block">:message</p>')
-    ) ?>
+        <h3>{{__('health.secondary-contact')}}</h3>
 
-    <?php echo Form::control_group(
-        Form::label('secondary_contact_relationship', __('health.contact_relationship')),
-        Form::text('secondary_contact_relationship', HealthForm::old('secondary_contact_relationship')),
-        'contact_relationship'.$errors->first('secondary_contact_relationship', ' error'),
-        $errors->first('secondary_contact_relationship', '<p class="help-block">:message</p>')
-    ) ?>
+        <?php echo Form::control_group(
+            Form::label('secondary_contact_name', __('health.contact_name')),
+            Form::text('secondary_contact_name', HealthForm::old('secondary_contact_name')),
+            'contact_name'.$errors->first('secondary_contact_name', ' error'),
+            $errors->first('secondary_contact_name', '<p class="help-block">:message</p>')
+        ) ?>
 
-    <?php echo Form::control_group(
-        Form::label('secondary_contact_address', __('health.contact_address')),
-        Form::textarea('secondary_contact_address', HealthForm::old('secondary_contact_address'), array('rows' => 3)).'<br>'.
-        Form::small_text('secondary_contact_postcode', HealthForm::old('secondary_contact_postcode'), array('placeholder' => __('health.contact_postcode'), 'style' => 'text-transform: uppercase', 'maxlength' => 8)),
-        'address contact_address'.$errors->first('secondary_contact_address', ' error').$errors->first('secondary_contact_postcode', ' error'),
-        $errors->first('secondary_contact_address', '<p class="help-block">:message</p>') ?:
-        $errors->first('secondary_contact_postcode', '<p class="help-block">:message</p>')
-    ) ?>
+        <?php echo Form::control_group(
+            Form::label('secondary_contact_relationship', __('health.contact_relationship')),
+            Form::text('secondary_contact_relationship', HealthForm::old('secondary_contact_relationship')),
+            'contact_relationship'.$errors->first('secondary_contact_relationship', ' error'),
+            $errors->first('secondary_contact_relationship', '<p class="help-block">:message</p>')
+        ) ?>
 
-    <?php echo Form::control_group(
-        Form::label('secondary_contact_daytelephone', __('health.contact_day_telephone')),
-        Form::medium_telephone('secondary_contact_daytelephone', HealthForm::old('secondary_contact_daytelephone')),
-        'telephone'.$errors->first('secondary_contact_daytelephone', ' error'),
-        $errors->first('secondary_contact_daytelephone', '<p class="help-block">:message</p>')
-    ) ?>
-    <?php echo Form::control_group(
-        Form::label('secondary_contact_nighttelephone', __('health.contact_evening_telephone')),
-        Form::medium_telephone('secondary_contact_nighttelephone', HealthForm::old('secondary_contact_nighttelephone')),
-        'telephone'.$errors->first('secondary_contact_nighttelephone', ' error'),
-        $errors->first('secondary_contact_nighttelephone', '<p class="help-block">:message</p>')
-    ) ?>
-    <?php echo Form::control_group(
-        Form::label('secondary_contact_mobile', __('health.contact_mobile')),
-        Form::medium_telephone('secondary_contact_mobile', HealthForm::old('secondary_contact_mobile')),
-        'mobile'.$errors->first('secondary_contact_mobile', ' error'),
-        $errors->first('secondary_contact_mobile', '<p class="help-block">:message</p>')
-    ) ?>
+        <?php echo Form::control_group(
+            Form::label('secondary_contact_address', __('health.contact_address')),
+            Form::textarea('secondary_contact_address', HealthForm::old('secondary_contact_address'), array('rows' => 3)).'<br>'.
+            Form::small_text('secondary_contact_postcode', HealthForm::old('secondary_contact_postcode'), array('placeholder' => __('health.contact_postcode'), 'style' => 'text-transform: uppercase', 'maxlength' => 8)),
+            'address contact_address'.$errors->first('secondary_contact_address', ' error').$errors->first('secondary_contact_postcode', ' error'),
+            $errors->first('secondary_contact_address', '<p class="help-block">:message</p>') ?:
+            $errors->first('secondary_contact_postcode', '<p class="help-block">:message</p>')
+        ) ?>
+
+        <?php echo Form::control_group(
+            Form::label('secondary_contact_day_telephone', __('health.contact_day_telephone')),
+            Form::medium_telephone('secondary_contact_day_telephone', HealthForm::old('secondary_contact_day_telephone')),
+            'telephone'.$errors->first('secondary_contact_day_telephone', ' error'),
+            $errors->first('secondary_contact_day_telephone', '<p class="help-block">:message</p>')
+        ) ?>
+        <?php echo Form::control_group(
+            Form::label('secondary_contact_evening_telephone', __('health.contact_evening_telephone')),
+            Form::medium_telephone('secondary_contact_evening_telephone', HealthForm::old('secondary_contact_evening_telephone')),
+            'telephone'.$errors->first('secondary_contact_evening_telephone', ' error'),
+            $errors->first('secondary_contact_evening_telephone', '<p class="help-block">:message</p>')
+        ) ?>
+        <?php echo Form::control_group(
+            Form::label('secondary_contact_mobile', __('health.contact_mobile')),
+            Form::medium_telephone('secondary_contact_mobile', HealthForm::old('secondary_contact_mobile')),
+            'mobile'.$errors->first('secondary_contact_mobile', ' error'),
+            $errors->first('secondary_contact_mobile', '<p class="help-block">:message</p>')
+        ) ?>
+
+    </div></div>
 
     <h2>{{__('health.medical_details')}}</h2>
     <p>{{__('health.medical_include_extra')}}</p>
@@ -298,19 +284,24 @@
         </div>
     </div>
 
-    <?php echo Form::control_group(
-        Form::label('medical_tetnus_date[day]', __('health.medical_tetnus_date')),
-        HealthForm::date_select('medical_tetnus_date', 0),
-        'tetnus'.$errors->has('medical_tetnus_date', ' error'),
-        $errors->has('medical_tetnus_date', '<p class="help-block">:message</p>')
-    ) ?>
+    <div class="control-group medical_tetnus_date{{ $errors->first('medical_tetnus_date', ' error') }}">
+        {{ Form::label('medical_tetnus_date[day]', __('health.medical_tetnus_date')) }}
+        <div class="controls">
+            {{ HealthForm::date_select('medical_tetnus_date', 0) }}
+        
+            {{ $errors->first('medical_tetnus_date', '<p class="help-block">:message</p>') }}
+        </div>
+    </div>
 
-    <?php echo Form::control_group(
-        Form::label('medical_contact_lens', __('health.medical_contact_lens')),
-        Form::mini_select('medical_contact_lens', HealthForm::yesno(), HealthForm::old('medical_contact_lens')),
-        'contact_lens'.$errors->has('medical_contact_lens', ' error'),
-        $errors->has('medical_contact_lens', '<p class="help-block">:message</p>')
-    ) ?>
+    <div class="control-group contact_lens{{ $errors->first('medical_contact_lens', ' error') }}">
+        {{ Form::label('medical_contact_lens', __('health.medical_contact_lens')) }}
+
+        <div class="controls">
+            {{ Form::mini_select('medical_contact_lens', HealthForm::yesno(), HealthForm::old('medical_contact_lens')) }}
+
+            {{ $errors->first('medical_contact_lens', '<p class="help-block">:message</p>') }}
+        </div>
+    </div>
 
     <div class="control-group medical_treatment{{ $errors->first('medical_treatment', ' error') }}">
         {{ Form::label('medical_treatment', __('health.medical_treatment')) }}
@@ -324,13 +315,21 @@
         </div>
     </div>
 
-    <div class="control-group medication{{ $errors->first('medication', ' error') }}">
+    <div class="row">
+    <div class="control-group medication{{ $errors->first('medication', ' error') }} span6">
         {{ Form::label('medication', __('health.medication')) }}
         <div class="controls">
-            {{ Form::xlarge_textarea('medication', HealthForm::old('medication'), array('rows' => 2)) }}
+            {{ Form::xlarge_textarea('medication', HealthForm::old('medication'), array('rows' => 4)) }}
 
             {{ $errors->first('medication', '<p class="help-block">:message</p>') }}
         </div>
+    </div>
+@if (! HealthForm::$adult)
+    <div class="span6">
+        <h4 style="font-size: 100%; padding: 0; margin: 0 0 5px">{{__('health.medication_note')}}</h4>
+        <p style="line-height: 1.6">{{__('health.medication_note_detail')}}</p>
+    </div>
+@endif
     </div>
 
     <h3>{{ __('health.hospital-consultant') }}</h3>
@@ -370,33 +369,31 @@
         $errors->first('patient_number', '<p class="help-block">:message</p>')
     ) ?>
 
-    <h3>{{ __('health.for-members-of-tsa') }}</h3>
-    <p>{{ __('health.for-members-of-tsa-detail') }}</p>
-
-    <h3>{{ __('health.emergency-permission') }}</h3>
-    <p>{{ __('health.emergency-permission-detail') }}</p>
 
 
-    <h2>{{ __('health.parent-permission') }}</h2>
+    <h2>{{__('health.permission')}}</h2>
+    <p>{{__('health.permission_detail')}}</p>
+    <p><strong>{{__('health.changes_detail')}}</strong></p>
 
-    <?php echo Form::control_group(
-        Form::label('parent_name', __('health.parent_name')),
-        Form::text('parent_name', HealthForm::old('parent_name')).' '.
-        Form::small_select('parent_guardian', HealthForm::parent_guardian(), HealthForm::old('parent_guardian')),
-        'parent_name'.$errors->first('parent_name', ' error').$errors->first('parent_guardian', ' error'),
-        $errors->first('parent_name', '<p class="help-block">:message</p>').
-        $errors->first('parent_guardian', '<p class="help-block">:message</p>')
-    ) ?>
+    <h3>{{__('health.publicity')}}</h3>
+    <p>{{__('health.publicity_detail')}}</p>
 
-    <?php echo Form::control_group(
-        Form::label('parent_email', __('health.parent_email')),
-        Form::email('parent_email', HealthForm::old('parent_email')),
-        'parent_email'.$errors->first('parent_email', ' error'),
-        $errors->first('parent_email', '<p class="help-block">:message</p>')
-    ) ?>
+    <h3>{{__('health.cancellation')}}</h3>
+    <p>{{__('health.cancellation_detail')}}</p>
+
+
+    <h3>{{__('health.consent')}}</h3>
+    <p>{{__('health.consent_detail')}}</p>
+    
+
+    <div class="form-inline"><div class="control-group consent{{ $errors->first('consent', ' error') }}">
+        {{ Form::label('consent', __('health.understand')) }}
+        {{ Form::mini_select('consent', HealthForm::yesno(), HealthForm::old('consent')) }}
+        {{ $errors->first('consent', '<span class="help-inline">:message</span>') }}
+    </div></div>
 
     <?php echo Form::actions(array(
-        Button::primary_submit('Save'),
+        Button::primary_submit(__('health.submit')),
     )) ?>
 
 {{ Form::close() }}
