@@ -38,6 +38,7 @@
     Route::get('health', 'health@index');
     Route::any('health/u18', 'health@u18');
     Route::any('health/o18', 'health@o18');
+    Route::any('health/(:num)/(:any)', 'health@show');
 
     // Route::any('logout', 'session@destroy');
 // });
